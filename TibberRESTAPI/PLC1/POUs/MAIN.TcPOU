@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="MAIN" Id="{745caa8e-9c11-402e-95ef-76a3f0815c75}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	//https://developer.tibber.com/docs/guides/calling-api
+	fbTibberClient		: FB_IotHttpClient :=(sHostName := 'api.tibber.com', nHostPort := 443, bKeepAlive := FALSE, stTLS := (bNoServerCertCheck := TRUE));
+	fbTibberApi			: FB_TibberApi;
+	// Tibber Demo Token: 5K4MVS-OjfWhK_4yrjOlFe1F6kJXPVf7eQYggo8ebAE
+	sToken				: STRING := '5K4MVS-OjfWhK_4yrjOlFe1F6kJXPVf7eQYggo8ebAE';
+	eQuery				: E_Query;
+	bRun				: BOOL;
+	bError				: BOOL;
+	bBusy				: BOOL;
+	nStatus				: UINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF fbTibberClient.bConfigured THEN
+	fbTibberApi(
+		bSend:= bRun, 
+		fbClient:= fbTibberClient, 
+		pTibberPrice:= ADR(GVL.stTibberPrice), 
+		nSize:= SIZEOF(GVL.stTibberPrice),
+		sToken:= sToken,
+		eQuery:= eQuery,
+		bBusy=> bBusy, 
+		bError=> bError,
+		nStatus=> nStatus );
+END_IF
+fbTibberClient.Execute();]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="18" Count="0" />
+      <LineId Id="51" Count="4" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="37" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

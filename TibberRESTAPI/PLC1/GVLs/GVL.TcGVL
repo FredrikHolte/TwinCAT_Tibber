@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <GVL Name="GVL" Id="{3fe86f8d-8d26-4527-b1f6-6361313d3ff3}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	stTibberPrice		: ST_TibberPrice;
+END_VAR
+VAR_GLOBAL CONSTANT
+	nHomes				: UINT := 1;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <DUT Name="ST_Result" Id="{6ddf8eb2-cd00-48a6-a971-888b44c92d5f}">
+    <Declaration><![CDATA[TYPE ST_Result :
+STRUCT
+	total    : REAL;
+	energy   : REAL;
+	tax      : REAL;
+	startsAt : STRING;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

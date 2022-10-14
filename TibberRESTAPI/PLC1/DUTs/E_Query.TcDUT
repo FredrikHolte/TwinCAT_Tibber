@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <DUT Name="E_Query" Id="{1067954e-afe8-48fa-94e0-5e5066ae48e7}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_Query :
+(
+	current := 0,
+	today := 1,
+	tomorrow := 2,
+	all := 3
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

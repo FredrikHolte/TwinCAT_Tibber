@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <DUT Name="ST_PriceInfo" Id="{33a11925-bcf7-49ba-8211-6dca925d8841}">
+    <Declaration><![CDATA[TYPE ST_PriceInfo :
+STRUCT
+	current		: ST_Result;
+	today		: ARRAY [0..23] OF ST_Result;
+	tomorrow	: ARRAY [0..23] OF ST_Result;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_TibberAPI" Id="{a130465d-acc1-4978-9c98-c029987b13e7}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TibberAPI
+//Tested and works with 4024.22 4024.29 4024.32 4024.35
+//Will not work with any 4022. 4024.7 may also not work.
+//Based on the Beckhoff Postman POST example: https://infosys.beckhoff.com/content/1033/tf6760_tc3_iot_https_rest/7876792971.html?id=8531523618449441037
+VAR_INPUT
+    bSend				: BOOL;
+	pTibberPrice		: PVOID;
+	nSize				: UINT;
+	sToken				: STRING;
+	eQuery				: E_Query;
+END_VAR
+VAR_IN_OUT
+    fbClient            : FB_IotHttpClient;
+END_VAR
+VAR_OUTPUT
+    bBusy               : BOOL;
+    bError              : BOOL;
+	nStatus				: UINT;
+END_VAR
+VAR
+    fbRequest           : FB_IotHttpRequest;
+	fbHeader            : FB_IotHttpHeaderFieldMap;
+    fbJson              : FB_JsonDomParser;
+	fbJsonDataType		: FB_JsonReadWriteDataType;
+	RisingEdge          : R_TRIG; 
+    sContent            : STRING (4095);
+	sContentReceive		: STRING (6143);
+    nErrCount           : UDINT;
+	nState              : UDINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[RisingEdge(CLK:= bSend);
+CASE nState OF
+0:
+    IF RisingEdge.Q THEN
+		sToken := CONCAT('Bearer	', sToken);
+		fbHeader.AddField('Authorization', sToken, FALSE);
+		fbRequest.sContentType := 'application/json; charset=utf-8';
+		sContent := M_QueryType(eQuery := eQuery);
+        IF fbRequest.SendRequest(sUri:= '/v1-beta/gql/', fbClient:= fbClient, eRequestType:= ETcIotHttpRequestType.HTTP_POST, pContent:= ADR(sContent), nContentSize:= LEN2(ADR(sContent)), fbHeader:=fbHeader) THEN
+            nState:= 1;
+            bBusy:= TRUE;
+            bError:= FALSE;
+        END_IF
+    END_IF
+1:	
+	IF NOT fbRequest.bBusy THEN
+		bError:= TRUE;
+		IF NOT fbRequest.bError THEN				 					
+			IF fbRequest.GetContent(pContent:= ADR(sContentReceive), nContentSize:= SIZEOF(sContentReceive), bSetNullTermination:= TRUE) AND fbRequest.nStatusCode >= 200 AND fbRequest.nStatusCode < 300 THEN
+					IF fbJsonDataType.SetSymbolFromJson(sContentReceive, 'ST_TibberPrice', nSize, pTibberPrice) THEN
+						bError:= FALSE;
+					END_IF				
+			END_IF				
+		END_IF
+		nState:= 0;
+		nStatus := fbRequest.nStatusCode;
+		bBusy:= FALSE;
+		IF bError THEN
+			nErrCount:= nErrCount+1;
+		END_IF		
+	END_IF  	
+END_CASE]]></ST>
+    </Implementation>
+    <Method Name="M_QueryType" Id="{a5470e73-a6fe-4a9b-a87a-f5c9e170e702}">
+      <Declaration><![CDATA[METHOD M_QueryType : STRING (4095)
+VAR_INPUT
+	eQuery		: E_Query;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE eQuery OF
+	E_Query.current:
+		M_QueryType:= '{ "query": "{viewer {homes {currentSubscription{priceInfo{current{total energy tax startsAt }}}}}}" }';
+	E_Query.today:
+		M_QueryType:= '{ "query": "{viewer {homes {currentSubscription {priceInfo {today {total energy tax startsAt }}}}}}" }';
+	E_Query.tomorrow:
+		M_QueryType:= '{ "query": "{viewer {homes {currentSubscription {priceInfo {tomorrow {total energy tax startsAt }}}}}}" }';
+	E_Query.all:
+		M_QueryType:= '{ "query": "{viewer {homes{currentSubscription {priceInfo {current {total energy tax startsAt}today {total energy tax startsAt}tomorrow {total energy tax startsAt }}}}}}" }';
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_TibberAPI">
+      <LineId Id="49" Count="3" />
+      <LineId Id="249" Count="1" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="251" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="57" Count="8" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="72" Count="1" />
+      <LineId Id="75" Count="2" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="78" Count="4" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TibberAPI.M_QueryType">
+      <LineId Id="7" Count="8" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
