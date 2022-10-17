@@ -1,6 +1,6 @@
 # TwinCAT_Tibber
 
-An example how to fetch today and tomorrows electricity price from the Swedish supplyer Tibber.
+An example how to fetch today and tomorrows electricity price from Tibber.
 Use it as is and for free. No warranty.
 
 Based on the Beckhoff HTTP REST Postman POST exampple:
