@@ -19,3 +19,6 @@ The struct is done for the included querys. For new querys, make proper adjustme
 PS. Tibber release tomorrows prices after 13:00. Before then you must ask for todays prices to get a reslut.
 
 Kind regards Fredrik
+
+Update. Tibber return 25 hours at wintertime change. The time is localtime and UTC offset after.
+![image](https://user-images.githubusercontent.com/115786742/199045911-1161b618-2cbc-48a4-bc90-fcda47634864.png)
