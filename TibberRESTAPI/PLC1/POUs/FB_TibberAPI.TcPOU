@@ -1,10 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="FB_TibberAPI" Id="{a130465d-acc1-4978-9c98-c029987b13e7}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_TibberAPI
 //Tested and works with 4024.22 4024.29 4024.32 4024.35
 //Will not work with any 4022. 4024.7 may also not work.
 //Based on the Beckhoff Postman POST example: https://infosys.beckhoff.com/content/1033/tf6760_tc3_iot_https_rest/7876792971.html?id=8531523618449441037
+//Tibber Price Level explained:
+//NORMAL	
+//The price is greater than 90 % and smaller than 115 % compared to average price.
+//CHEAP	
+//The price is greater than 60 % and smaller or equal to 90 % compared to average price.
+//VERY_CHEAP	
+//The price is smaller or equal to 60 % compared to average price.
+//EXPENSIVE	
+//The price is greater or equal to 115 % and smaller than 140 % compared to average price.
+//VERY_EXPENSIVE	
+//The price is greater or equal to 140 % compared to average price.
+// https://developer.tibber.com/docs/reference#pricelevel
 VAR_INPUT
     bSend				: BOOL;
 	pTibberPrice		: PVOID;
@@ -74,13 +86,13 @@ END_VAR
       <Implementation>
         <ST><![CDATA[CASE eQuery OF
 	E_Query.current:
-		M_QueryType:= '{ "query": "{viewer {homes {currentSubscription{priceInfo{current{total energy tax startsAt }}}}}}" }';
+		M_QueryType:= '{ "query": "{viewer {homes {currentSubscription{priceInfo{current{total energy tax startsAt level }}}}}}" }';
 	E_Query.today:
-		M_QueryType:= '{ "query": "{viewer {homes {currentSubscription {priceInfo {today {total energy tax startsAt }}}}}}" }';
+		M_QueryType:= '{ "query": "{viewer {homes {currentSubscription {priceInfo {today {total energy tax startsAt level }}}}}}" }';
 	E_Query.tomorrow:
-		M_QueryType:= '{ "query": "{viewer {homes {currentSubscription {priceInfo {tomorrow {total energy tax startsAt }}}}}}" }';
+		M_QueryType:= '{ "query": "{viewer {homes {currentSubscription {priceInfo {tomorrow {total energy tax startsAt level }}}}}}" }';
 	E_Query.all:
-		M_QueryType:= '{ "query": "{viewer {homes{currentSubscription {priceInfo {current {total energy tax startsAt}today {total energy tax startsAt}tomorrow {total energy tax startsAt }}}}}}" }';
+		M_QueryType:= '{ "query": "{viewer {homes{currentSubscription {priceInfo {current {total energy tax startsAt level}today {total energy tax startsAt level}tomorrow {total energy tax startsAt level }}}}}}" }';
 END_CASE]]></ST>
       </Implementation>
     </Method>
