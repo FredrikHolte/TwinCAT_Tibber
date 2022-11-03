@@ -20,5 +20,24 @@ PS. Tibber release tomorrows prices after 13:00. Before then you must ask for to
 
 Kind regards Fredrik
 
-Update. Tibber return 25 hours at wintertime change. The time is localtime and UTC offset after.
+Update.
+Tibber return 25 hours at wintertime change. The time is localtime and UTC offset after.
 ![image](https://user-images.githubusercontent.com/115786742/199045911-1161b618-2cbc-48a4-bc90-fcda47634864.png)
+
+
+Update.
+Added fetch Pricelevel from Tibber, Pricelevel is included in all the querys and always returned:
+PriceLevel
+Price level based on trailing price average (3 days for hourly values and 30 days for daily values)
+Value	Description
+NORMAL	
+The price is greater than 90 % and smaller than 115 % compared to average price.
+CHEAP	
+The price is greater than 60 % and smaller or equal to 90 % compared to average price.
+VERY_CHEAP	
+The price is smaller or equal to 60 % compared to average price.
+EXPENSIVE	
+The price is greater or equal to 115 % and smaller than 140 % compared to average price.
+VERY_EXPENSIVE	
+The price is greater or equal to 140 % compared to average price.
+https://developer.tibber.com/docs/reference#pricelevel
